@@ -15,20 +15,22 @@ import android.widget.BaseAdapter
 import android.widget.Switch
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
+import android.location.LocationManager
+
+
 
 class MainActivity : AppCompatActivity() {
     lateinit var wifiBaseAdapter: WifiBaseAdapter
     lateinit var wifiManager: WifiManager
     var dataList = arrayListOf<Map<String, String>>()
 
-    override fun registerReceiver(receiver: BroadcastReceiver?, filter: IntentFilter?): Intent? {
-        return super.registerReceiver(receiver, filter)
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val locManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         wifiManager = getApplicationContext().getSystemService(Context.WIFI_SERVICE) as WifiManager
+
 
         wifiBaseAdapter = WifiBaseAdapter(dataList)
         listview_wifi.adapter = wifiBaseAdapter
@@ -37,6 +39,13 @@ class MainActivity : AppCompatActivity() {
             override fun onClick(v: View?) {
                 if (v is Switch) {
                     wifiManager.isWifiEnabled = v.isChecked
+
+                    if(!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                        println("ssssssssssssssssssssssssssssssssss1111111111")
+                        // 未打开位置开关，可能导致定位失败或定位不准，提示用户或做相应处理
+                    } else {
+                        println("ssssssssssssssssssssssssssssssssss222222222")
+                    }
                 }
             }
         })
@@ -51,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         intentFilter.addAction(WifiManager.RSSI_CHANGED_ACTION)
         registerReceiver(WifiBroadcastReceiver(), intentFilter)
     }
+
     fun updateDataAndView() {
         dataList.clear()
         for (scanResult in wifiManager.scanResults) {
