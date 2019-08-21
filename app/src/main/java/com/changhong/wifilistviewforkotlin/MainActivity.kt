@@ -57,10 +57,13 @@ class MainActivity : AppCompatActivity() {
             dataList.add(
                 mapOf(
                     "ssid" to scanResult.SSID,
-                    "bssid" to scanResult.BSSID))
+                    "bssid" to scanResult.BSSID,
+                    "rssi" to WifiManager.calculateSignalLevel(scanResult.level, 10).toString()))
         }
         wifiBaseAdapter.notifyDataSetChanged()
+
     }
+
 
     inner class WifiBaseAdapter(dataList: List<Map<String, String>>): BaseAdapter() {
         private var dataList = dataList
@@ -70,6 +73,7 @@ class MainActivity : AppCompatActivity() {
 
             view.findViewById<TextView>(R.id.textview_ssid).text = dataList.get(position).get("ssid")
             view.findViewById<TextView>(R.id.textview_bssid).text = dataList.get(position).get("bssid")
+            view.findViewById<TextView>(R.id.rssi).text = dataList.get(position).get("rssi")
 
             return view
         }
