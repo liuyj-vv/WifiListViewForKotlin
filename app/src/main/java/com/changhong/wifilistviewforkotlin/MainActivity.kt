@@ -141,6 +141,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     inner class WifiBroadcastReceiver: BroadcastReceiver() {
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
         override fun onReceive(context: Context?, intent: Intent?) {
 
             println("ACTION: "+ intent?.action)
